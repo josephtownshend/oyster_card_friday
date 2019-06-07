@@ -26,19 +26,29 @@ describe Oystercard do
     end
   end
 
-  describe '#touch_in' do
-    it 'it is in a journey when you touch in' do
+  describe '#in_journey?' do
+    it 'it can be in a journey' do
+    subject.top_up(Oystercard::MAXIMUM_BALANCE)
+    subject.touch_in
+    expect(subject).to be_in_journey
+  end
+
+    it 'it can touch in' do
       subject.top_up 5
       expect{ subject.touch_in}.to change{ subject.journey}.to true
     end
-  end
 
-  describe '#touch_out' do
-    it 'it leaves the journey when you touch out' do
+    it 'it can touch out' do
       subject.top_up 5
+      subject.touch_in
       expect{ subject.touch_out}.to change{ subject.journey}.to false
     end
   end
 
+  describe '#mimimum_fare' do
+    it 'will not touch in if below minimum balance' do
+    expect{ subject.touch_in }.to raise_error "Insufficient balance to touch in"
+  end
+  end
 
 end
